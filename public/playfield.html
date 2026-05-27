@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="playfield.css" />
+    <!-- Socket.IO vom eigenen Server laden statt vom CDN.
+         Der Socket.IO-Server stellt seine Client-Bibliothek automatisch unter /socket.io/socket.io.js bereit.
+         Vorteil: Client und Server haben garantiert die gleiche Version,
+         kein externer CDN-Aufruf nötig, funktioniert auch ohne Internet. -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- defer: playfield.js wird parallel geladen, aber erst ausgeführt wenn das
+         HTML vollständig geparst ist – und nach allen Nicht-defer-Scripts (Socket.IO oben).
+         So ist io() garantiert verfügbar wenn setup() aufgerufen wird. -->
     <script src="playfield.js" defer></script>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   </head>
   <body>
     <div class="container">

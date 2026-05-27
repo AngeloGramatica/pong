@@ -1,0 +1,13 @@
+# Railway Build-Konfiguration
+# Railway verwendet standardmässig "Railpack" als Build-System, das Node.js-Projekte
+# manchmal nicht automatisch erkennt. Diese Datei sagt Railway explizit:
+# - womit gebaut werden soll (nixpacks = bewährtes, quelloffenes Build-System)
+# - welcher Befehl die App startet
+
+[build]
+# nixpacks liest package.json, erkennt Node.js automatisch und installiert Dependencies.
+builder = "nixpacks"
+
+[deploy]
+# Entspricht dem "start"-Script in package.json – hier explizit für Railway.
+startCommand = "node server.js"

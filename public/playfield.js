@@ -47,7 +47,10 @@ let gameReady = false;
 //#endregion ****************************************************************************************************************************************** */
 
 function setup() {
-  socket = io.connect("http://localhost:3000"); // Verbindung zum Socket.IO-Server herstellen
+  // io() ohne URL verbindet automatisch zum Server, von dem die Seite geladen wurde.
+  // Lokal ist das http://localhost:3000, in Production die Railway-URL –
+  // Socket.IO liest den Origin der Seite aus, kein manueller Wechsel nötig.
+  socket = io();
 
   // Role empfangen – wir wissen jetzt wer wir sind
   socket.on("role", (role) => {
@@ -240,8 +243,12 @@ const slider = document.getElementById("speedSlider");
 const speedValue = document.getElementById("speedValue");
 
 slider.addEventListener("input", (e) => {
-  speed = parseInt(e.target.value);
-  speedValue.textContent = speed;
+  const newSpeed = parseInt(e.target.value);
+  speedValue.textContent = newSpeed;
+  // Neue Geschwindigkeit an den Server schicken, damit gameState.speed aktualisiert wird.
+  // Würden wir nur die lokale Variable ändern, hätte das keinen Effekt:
+  // der Server überschreibt jeden Frame den Client-State mit seinem eigenen gameState.
+  socket.emit("speedChange", newSpeed);
 });
 
 canvas.addEventListener("click", () => {

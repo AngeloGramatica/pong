@@ -9,8 +9,14 @@ let express = require("express");
 
 //Express App erstellen
 let app = express();
-let server = app.listen(3000, function () {
-  console.log("Server läuft auf Port 3000");
+
+// Railway (und andere Cloud-Plattformen) vergeben den Port dynamisch über eine Umgebungsvariable.
+// process.env.PORT liest diese Variable aus dem Betriebssystem-Kontext.
+// Lokal ist PORT nicht gesetzt → Fallback auf 3000 für die Entwicklung.
+// Ohne diesen Fix schlägt der Railway-Health-Check fehl, weil der Server am falschen Port lauscht.
+const PORT = process.env.PORT || 3000;
+let server = app.listen(PORT, function () {
+  console.log("Server läuft auf Port " + PORT);
 });
 
 // Wir verwalten die zwei Spieler-Slots
@@ -122,6 +128,27 @@ function newConnection(socket) {
         gameState.ball.vx = -gameState.speed;
         gameState.ball.vy = 0;
       }
+    }
+  });
+
+  // Schwierigkeit ändern – nur der Server kennt den echten gameState.
+  // Der Client kann aiSpeed nicht direkt setzen, er schickt nur den gewählten Level-Namen.
+  socket.on("difficultyChange", (level) => {
+    // Nur bekannte Level akzeptieren – schützt vor ungültigen Werten vom Client.
+    if (DIFFICULTY_LEVELS[level] !== undefined) {
+      gameState.aiSpeed = DIFFICULTY_LEVELS[level];
+      console.log("Schwierigkeit geändert zu: " + level + " (" + DIFFICULTY_LEVELS[level] + ")");
+    }
+  });
+
+  // Geschwindigkeit ändern – der Slider im Browser schickt den neuen Wert,
+  // der Server setzt ihn im gameState, damit alle Kollisionen und die AI damit rechnen.
+  socket.on("speedChange", (newSpeed) => {
+    // Defensiv validieren: muss eine Ganzzahl zwischen 1 und 20 sein.
+    // parseInt() wandelt Strings in Zahlen um; isNaN() prüft ob die Konvertierung gescheitert ist.
+    const speed = parseInt(newSpeed);
+    if (!isNaN(speed) && speed >= 1 && speed <= 20) {
+      gameState.speed = speed;
     }
   });
 
