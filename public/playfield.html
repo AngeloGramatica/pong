@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="playfield.css" />
+    <script src="playfield.js" defer></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="settings">
+        <div class="speedLevel">
+          Geschwindigkeit
+          <input
+            type="range"
+            id="speedSlider"
+            min="1"
+            max="20"
+            value="10"
+            step="1"
+            style="margin: 0 10px; vertical-align: middle"
+          />
+          <span id="speedValue">10</span>
+        </div>
+      
+          <select id="difficultySelect">
+            <option value="Too young to die">Too young to die</option>
+            <option value="Not too rough">Not too rough</option>
+            <option value="Hurt me plenty" selected>Hurt me plenty</option>
+            <option value="Ultra-Violence">Ultra-Violence</option>
+            <option value="Nightmare">Nightmare</option>
+          </select>
+      </div>
+  
+      <!-- Das <canvas>-Element ist eine leere Zeichenfläche im HTML.
+       Es hat keine eigene Logik – alles wird via JS hineingezeichnet.
+       Breite/Höhe setzen wir lieber per JS (siehe unten), nicht per HTML-Attribut,
+       damit wir sie an einer einzigen Stelle (SIZE) kontrollieren können. -->
+      <canvas id="gameCanvas"></canvas>
+    </div>
+  </body>
+</html>
