@@ -161,12 +161,7 @@ function draw() {
 
     ctx.font = "16px monospace";
     ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.fillText(
-      "Seite neu laden um nochmal zu spielen",
-      SIZE / 2,
-      SIZE / 2 + 20,
-    );
-
+    // Nur ein Text – der Reset läuft jetzt per Klick via socket.emit("resetGame")
     ctx.fillText("Klicken um nochmal zu spielen", SIZE / 2, SIZE / 2 + 20);
   }
 }
